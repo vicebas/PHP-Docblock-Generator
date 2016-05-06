@@ -1,5 +1,5 @@
 {
-    "name": "vicebas/php-docblock-generator",
+    "name": "agentile/php-docblock-generator",
     "description": "Generate PHPDoc Blocks in files and Folders",
     "require": {},
     "autoload": {
@@ -9,5 +9,5 @@
 	},
     "bin": [
 		"bin/docblock"
-	]
+	],
 }
