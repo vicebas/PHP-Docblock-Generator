@@ -6,9 +6,9 @@ file/folder - the file or folder you want to docblock (php files)
 target function - to docblock only a specific method/function name
 
 Example:
-php docblock.php target.php targetFunction
+bin/docblock target.php targetFunction
 or
-php docblock.php target/dir -r targetFunction
+bin/docblock target/dir -r targetFunction
 
 Credit to Sean Coates for the getProtos function, modified a little.
 http://seancoates.com/fun-with-the-tokenizer
