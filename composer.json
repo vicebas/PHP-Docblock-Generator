@@ -9,5 +9,5 @@
 	},
     "bin": [
 		"bin/docblock"
-	],
+	]
 }

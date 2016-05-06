@@ -11,4 +11,4 @@ or
 bin/docblock target/dir -r targetFunction
 
 Credit to Sean Coates for the getProtos function, modified a little.
-http://seancoates.com/fun-with-the-tokenizer
+http://seancoates.com/fun-with-the-tokenizer 
