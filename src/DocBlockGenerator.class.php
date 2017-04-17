@@ -66,7 +66,7 @@ class DocBlockGenerator {
         if (is_file($this->target)) {
             $valid_file = $this->fileCheck($this->target);
             if ($valid_file == false) {
-                return;
+                return false;
             }
             $this->fileDocBlock();
         } elseif (is_dir($this->target)) {
@@ -81,7 +81,7 @@ class DocBlockGenerator {
             }
         } else {
             $this->log[] = 'This is not a file or folder.';
-            return;
+            return false;
         }
     }
 
@@ -419,7 +419,7 @@ class DocBlockGenerator {
         $doc_block .= "{$indent} *\n";
         if (isset($data['params'])) {
             foreach($data['params'] as $func_param) {
-                $doc_block .= "{$indent} * @param {$func_param['name']}\n";
+				$doc_block .= "{$indent} * @param {$func_param['name']} ". (isset($func_param['default'])?$this->decodeType($func_param['default']):'type') . "\n";
             }
         }
         $doc_block .= "{$indent} *\n";
@@ -433,6 +433,32 @@ class DocBlockGenerator {
 
         return $doc_block;
     }
+
+	/**
+	 * Decode the parameter type
+	 * @param type $type
+	 * @return string
+	 */
+	public function decodeType($type) {
+		$typeToReturn = $type;
+
+		if ($type == "''") {
+			$typeToReturn =  'string';
+		}
+
+		if (is_int($type)) {
+			$typeToReturn =  'int';
+		}
+
+		if ($type === false) {
+			$typeToReturn = 'bool';
+		}
+
+		if ($type === true) {
+			$typeToReturn = 'bool';
+		}
+		return $typeToReturn;
+	}
 
     /**
      * classDocBlock
