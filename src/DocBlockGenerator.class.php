@@ -187,7 +187,7 @@ class DocBlockGenerator {
                 $next_by_ref = FALSE;
                 $this_func = array();
 
-                while ($tokens[++$i] != ')') {
+                while ($tokens[++$i] != '{') {
                     if (is_array($tokens[$i]) && $tokens[$i][0] != T_WHITESPACE) {
                         if (!$this_func) {
                             $this_func = array(
