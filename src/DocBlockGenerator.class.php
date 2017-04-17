@@ -186,6 +186,25 @@ class DocBlockGenerator {
             } elseif (is_array($tokens[$i]) && $tokens[$i][0] == T_FUNCTION) {
                 $next_by_ref = FALSE;
                 $this_func = array();
+				$func_status = array();
+
+				if ($tokens[$i-2][1] == 'static') {
+					$func_status['static'] = true;
+				} else {
+					$func_status['static'] = false;
+				}
+
+				if ($tokens[$i-2][1] != 'static') {
+					if ($tokens[$i-2][1] == 'public' || $tokens[$i-2][1] == 'private'|| $tokens[$i-2][1] == 'protected') {
+						$func_status['access'] = $tokens[$i-2][1];
+					}
+				}
+				if ($tokens[$i-2][1] == 'static') {
+					if ($tokens[$i-4][1] == 'public' || $tokens[$i-4][1] == 'private'|| $tokens[$i-4][1] == 'protected') {
+						$func_status['access'] = $tokens[$i-4][1];
+					}
+					
+				}
 
                 while ($tokens[++$i] != '{') {
                     if (is_array($tokens[$i]) && $tokens[$i][0] != T_WHITESPACE) {
@@ -213,7 +232,8 @@ class DocBlockGenerator {
                         $this_func['params'][count($this_func['params']) - 1]['default'] = $tokens[$i][1];
                     }
                 }
-                $funcs[] = $this_func;
+				
+                $funcs[] = $this_func + $func_status;
             } elseif ($tokens[$i] == '{' || $tokens[$i] == 'T_CURLY_OPEN' || $tokens[$i] == 'T_DOLLAR_OPEN_CURLY_BRACES') {
                 ++$class_depth;
             } elseif ($tokens[$i] == '}') {
@@ -425,10 +445,15 @@ class DocBlockGenerator {
         $doc_block .= "{$indent} *\n";
         $doc_block .= "{$indent} * @return\n";
         $doc_block .= "{$indent} *\n";
-        $doc_block .= "{$indent} * @access\n";
-        $doc_block .= "{$indent} * @static\n";
-        $doc_block .= "{$indent} * @see\n";
-        $doc_block .= "{$indent} * @since\n";
+		if (!empty($data['access'])) {
+			$doc_block .= "{$indent} * @access {$data['access']}\n";
+		}
+		if ($data['static']) {
+        	$doc_block .= "{$indent} * @static\n";
+		}
+		// We can't determine these automatically yet.
+        //$doc_block .= "{$indent} * @see\n";
+        //$doc_block .= "{$indent} * @since\n";
         $doc_block .= "{$indent} */\n";
 
         return $doc_block;
