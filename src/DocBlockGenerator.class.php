@@ -169,9 +169,13 @@ class DocBlockGenerator {
         $funcs = array();
         $classes = array();
         $curr_class = '';
+		$curr_func = '';
         $class_depth = 0;
         $count = count($tokens);
         for ($i = 0; $i < $count; $i++) {
+			if (is_array($tokens[$i]) && $tokens[$i][0] == T_RETURN) {
+				$funcs[$curr_func]['return'] = 'returns';
+			}
             if (is_array($tokens[$i]) && $tokens[$i][0] == T_CLASS) {
                 $line = $tokens[$i][2];
                 ++$i; // whitespace;
@@ -209,6 +213,7 @@ class DocBlockGenerator {
                 while ($tokens[++$i] != '{') {
                     if (is_array($tokens[$i]) && $tokens[$i][0] != T_WHITESPACE) {
                         if (!$this_func) {
+							$curr_func = $tokens[$i][1];
                             $this_func = array(
                                 'name' => $tokens[$i][1],
                                 'class' => $curr_class,
@@ -233,7 +238,7 @@ class DocBlockGenerator {
                     }
                 }
 				
-                $funcs[] = $this_func + $func_status;
+                $funcs[$curr_func] = $this_func + $func_status;
             } elseif ($tokens[$i] == '{' || $tokens[$i] == 'T_CURLY_OPEN' || $tokens[$i] == 'T_DOLLAR_OPEN_CURLY_BRACES') {
                 ++$class_depth;
             } elseif ($tokens[$i] == '}') {
@@ -443,7 +448,9 @@ class DocBlockGenerator {
             }
         }
         $doc_block .= "{$indent} *\n";
-        $doc_block .= "{$indent} * @return\n";
+		if (isset($data['return'])) {
+        	$doc_block .= "{$indent} * @return type\n";
+		}
         $doc_block .= "{$indent} *\n";
 		if (!empty($data['access'])) {
 			$doc_block .= "{$indent} * @access {$data['access']}\n";
