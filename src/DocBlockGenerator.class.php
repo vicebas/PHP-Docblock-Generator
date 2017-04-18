@@ -219,7 +219,7 @@ class DocBlockGenerator {
                                 'class' => $curr_class,
                                 'line' => $tokens[$i][2],
                             );
-                        } else {
+                        } elseif ($tokens[$i][0] == T_VARIABLE) {
                             $this_func['params'][] = array(
                                 'byRef' => $next_by_ref,
                                 'name' => $tokens[$i][1],
@@ -444,14 +444,13 @@ class DocBlockGenerator {
         $doc_block .= "{$indent} *\n";
         if (isset($data['params'])) {
             foreach($data['params'] as $func_param) {
-				$doc_block .= "{$indent} * @param {$func_param['name']} ". (isset($func_param['default'])?$this->decodeType($func_param['default']):'type') . "\n";
+				$doc_block .= "{$indent} * @param ". (isset($func_param['default'])?$this->decodeType($func_param['default']):'type') . " {$func_param['name']}\n";
             }
+        	$doc_block .= "{$indent} *\n";
         }
-        $doc_block .= "{$indent} *\n";
 		if (isset($data['return'])) {
         	$doc_block .= "{$indent} * @return type\n";
 		}
-        $doc_block .= "{$indent} *\n";
 		if (!empty($data['access'])) {
 			$doc_block .= "{$indent} * @access {$data['access']}\n";
 		}
@@ -511,15 +510,15 @@ class DocBlockGenerator {
         $doc_block .= "{$indent} * {$data['name']}\n";
         $doc_block .= "{$indent} * Insert description here\n";
         $doc_block .= "{$indent} *\n";
-        $doc_block .= "{$indent} * @category\n";
-        $doc_block .= "{$indent} * @package\n";
-        $doc_block .= "{$indent} * @author\n";
-        $doc_block .= "{$indent} * @copyright\n";
-        $doc_block .= "{$indent} * @license\n";
-        $doc_block .= "{$indent} * @version\n";
-        $doc_block .= "{$indent} * @link\n";
-        $doc_block .= "{$indent} * @see\n";
-        $doc_block .= "{$indent} * @since\n";
+        //$doc_block .= "{$indent} * @category\n";
+        //$doc_block .= "{$indent} * @package\n";
+        //$doc_block .= "{$indent} * @author\n";
+        //$doc_block .= "{$indent} * @copyright\n";
+        //$doc_block .= "{$indent} * @license\n";
+        //$doc_block .= "{$indent} * @version\n";
+        //$doc_block .= "{$indent} * @link\n";
+        //$doc_block .= "{$indent} * @see\n";
+        //$doc_block .= "{$indent} * @since\n";
         $doc_block .= "{$indent} */\n";
 
         return $doc_block;
