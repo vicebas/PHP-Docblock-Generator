@@ -66,7 +66,7 @@ class DocBlockGenerator {
         if (is_file($this->target)) {
             $valid_file = $this->fileCheck($this->target);
             if ($valid_file == false) {
-                return;
+                return false;
             }
             $this->fileDocBlock();
         } elseif (is_dir($this->target)) {
@@ -81,7 +81,7 @@ class DocBlockGenerator {
             }
         } else {
             $this->log[] = 'This is not a file or folder.';
-            return;
+            return false;
         }
     }
 
@@ -169,9 +169,13 @@ class DocBlockGenerator {
         $funcs = array();
         $classes = array();
         $curr_class = '';
+		$curr_func = '';
         $class_depth = 0;
         $count = count($tokens);
         for ($i = 0; $i < $count; $i++) {
+			if (is_array($tokens[$i]) && $tokens[$i][0] == T_RETURN) {
+				$funcs[$curr_func]['return'] = 'returns';
+			}
             if (is_array($tokens[$i]) && $tokens[$i][0] == T_CLASS) {
                 $line = $tokens[$i][2];
                 ++$i; // whitespace;
@@ -186,16 +190,36 @@ class DocBlockGenerator {
             } elseif (is_array($tokens[$i]) && $tokens[$i][0] == T_FUNCTION) {
                 $next_by_ref = FALSE;
                 $this_func = array();
+				$func_status = array();
 
-                while ($tokens[++$i] != ')') {
+				if ($tokens[$i-2][1] == 'static') {
+					$func_status['static'] = true;
+				} else {
+					$func_status['static'] = false;
+				}
+
+				if ($tokens[$i-2][1] != 'static') {
+					if ($tokens[$i-2][1] == 'public' || $tokens[$i-2][1] == 'private'|| $tokens[$i-2][1] == 'protected') {
+						$func_status['access'] = $tokens[$i-2][1];
+					}
+				}
+				if ($tokens[$i-2][1] == 'static') {
+					if ($tokens[$i-4][1] == 'public' || $tokens[$i-4][1] == 'private'|| $tokens[$i-4][1] == 'protected') {
+						$func_status['access'] = $tokens[$i-4][1];
+					}
+					
+				}
+
+                while ($tokens[++$i] != '{') {
                     if (is_array($tokens[$i]) && $tokens[$i][0] != T_WHITESPACE) {
                         if (!$this_func) {
+							$curr_func = $tokens[$i][1];
                             $this_func = array(
                                 'name' => $tokens[$i][1],
                                 'class' => $curr_class,
                                 'line' => $tokens[$i][2],
                             );
-                        } else {
+                        } elseif ($tokens[$i][0] == T_VARIABLE) {
                             $this_func['params'][] = array(
                                 'byRef' => $next_by_ref,
                                 'name' => $tokens[$i][1],
@@ -213,7 +237,8 @@ class DocBlockGenerator {
                         $this_func['params'][count($this_func['params']) - 1]['default'] = $tokens[$i][1];
                     }
                 }
-                $funcs[] = $this_func;
+				
+                $funcs[$curr_func] = $this_func + $func_status;
             } elseif ($tokens[$i] == '{' || $tokens[$i] == 'T_CURLY_OPEN' || $tokens[$i] == 'T_DOLLAR_OPEN_CURLY_BRACES') {
                 ++$class_depth;
             } elseif ($tokens[$i] == '}') {
@@ -419,20 +444,52 @@ class DocBlockGenerator {
         $doc_block .= "{$indent} *\n";
         if (isset($data['params'])) {
             foreach($data['params'] as $func_param) {
-                $doc_block .= "{$indent} * @param {$func_param['name']}\n";
+				$doc_block .= "{$indent} * @param ". (isset($func_param['default'])?$this->decodeType($func_param['default']):'type') . " {$func_param['name']}\n";
             }
+        	$doc_block .= "{$indent} *\n";
         }
-        $doc_block .= "{$indent} *\n";
-        $doc_block .= "{$indent} * @return\n";
-        $doc_block .= "{$indent} *\n";
-        $doc_block .= "{$indent} * @access\n";
-        $doc_block .= "{$indent} * @static\n";
-        $doc_block .= "{$indent} * @see\n";
-        $doc_block .= "{$indent} * @since\n";
+		if (isset($data['return'])) {
+        	$doc_block .= "{$indent} * @return type\n";
+		}
+		if (!empty($data['access'])) {
+			$doc_block .= "{$indent} * @access {$data['access']}\n";
+		}
+		if ($data['static']) {
+        	$doc_block .= "{$indent} * @static\n";
+		}
+		// We can't determine these automatically yet.
+        //$doc_block .= "{$indent} * @see\n";
+        //$doc_block .= "{$indent} * @since\n";
         $doc_block .= "{$indent} */\n";
 
         return $doc_block;
     }
+
+	/**
+	 * Decode the parameter type
+	 * @param type $type
+	 * @return string
+	 */
+	public function decodeType($type) {
+		$typeToReturn = $type;
+
+		if ($type == "''") {
+			$typeToReturn =  'string';
+		}
+
+		if (is_int($type)) {
+			$typeToReturn =  'int';
+		}
+
+		if ($type === false) {
+			$typeToReturn = 'bool';
+		}
+
+		if ($type === true) {
+			$typeToReturn = 'bool';
+		}
+		return $typeToReturn;
+	}
 
     /**
      * classDocBlock
@@ -453,15 +510,15 @@ class DocBlockGenerator {
         $doc_block .= "{$indent} * {$data['name']}\n";
         $doc_block .= "{$indent} * Insert description here\n";
         $doc_block .= "{$indent} *\n";
-        $doc_block .= "{$indent} * @category\n";
-        $doc_block .= "{$indent} * @package\n";
-        $doc_block .= "{$indent} * @author\n";
-        $doc_block .= "{$indent} * @copyright\n";
-        $doc_block .= "{$indent} * @license\n";
-        $doc_block .= "{$indent} * @version\n";
-        $doc_block .= "{$indent} * @link\n";
-        $doc_block .= "{$indent} * @see\n";
-        $doc_block .= "{$indent} * @since\n";
+        //$doc_block .= "{$indent} * @category\n";
+        //$doc_block .= "{$indent} * @package\n";
+        //$doc_block .= "{$indent} * @author\n";
+        //$doc_block .= "{$indent} * @copyright\n";
+        //$doc_block .= "{$indent} * @license\n";
+        //$doc_block .= "{$indent} * @version\n";
+        //$doc_block .= "{$indent} * @link\n";
+        //$doc_block .= "{$indent} * @see\n";
+        //$doc_block .= "{$indent} * @since\n";
         $doc_block .= "{$indent} */\n";
 
         return $doc_block;
