@@ -7,19 +7,22 @@ This class will generate DocBlock comment outlines for files/folders.
 This class will generate docblock outline for files/folders.
 
 ```sh
-php docblock.php --source=file|folder [ --recursive ] [ --exclude="vendor/ tools/" ] [ --dryrun ] [ --versose ]
+php docblock.php --source=file|folder [ --recursive ] \
+   [ --exclude="vendor/ tools/" ] [ --dryrun ] [ --versose ]
 ```
 
 ## Params
 
 Use from command line - params:
 
-   --source=path       - the file or folder you want to docblock (php files)
-   --recursive         - optional, recursively go through a folder
-   --exclude="p1/ p1/" - options, to exclude a series of paths
-   --functions="f1 f2" - optional, space delimited docblock only specific methods/functions
-   --dryrun            - optional, test the docblock but do not make any changes
-   --verbose           - optional, output verbose information on each file processed
+--source=path       - the file or folder you want to docblock (php files)
+--recursive         - optional, recursively go through a folder
+--exclude="p1/ p1/" - optional, to exclude a series of paths
+--functions="f1 f2" - optional, space delimited docblock only specific methods/functions
+--anonymous         - optional, document anonymous functions as well as normal functions
+--full              - optional, use full PHPDoc comment blocks instead of short
+--dryrun            - optional, test the docblock but do not make any changes
+--verbose           - optional, output verbose information on each file processed
 
 ## Examples
 
