@@ -54,7 +54,7 @@ php docblock.php --source=target/dir --exclude="vendor/ fa/" --recursive --dryru
 @version   0.87 (2016-06-16)
 @link      https://github.com/vicebas/PHP-Docblock-Generator
 
-@version   0.88 (2020-12-21)
+@version   1.1.0 (2020-12-21)
 @link      https://github.com/thewitness/PHP-Docblock-Generator
 
 ## Credits
