@@ -18,7 +18,7 @@ class DocBlockGenerator {
 	public $file_contents;
 	public $log = array();
 
-	private $version = '0.88';
+	private $version = '1.1.0';
 
 	private $nbr_docblocks  = 0;
 	private $total_files    = 0;
