@@ -9,7 +9,7 @@ This class will generate docblock outline for files/folders.
 ```sh
 php docblock.php --source=file|folder [ --recursive ] \
    [ --exclude="vendor/ tools/ ..." ] \
-   [ --function="f1 f2 ..." ] \
+   [ --functions="f1 f2 ..." ] \
    [ --dryrun ] [ --versose ] \
    [ --anonymous ] [ --full ]
 ```
