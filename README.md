@@ -44,18 +44,13 @@ php docblock.php --source=target/dir --exclude="vendor/ fa/" --recursive --dryru
 
 ## ChangeLog
 
-* author    Anthony Gentile
-  version   0.85
-  link      http://agentile.com/docblock/
+* version: 0.85, author, Anthony Gentile, link: http://agentile.com/docblock/
 
-* version   0.86 (2014-05-19)
-  link      https://github.com/mbrowniebytes/PHP-Docblock-Generator
+* version: 0.86 (2014-05-19), link: https://github.com/mbrowniebytes/PHP-Docblock-Generator
 
-* version   0.87 (2016-06-16)
-  link      https://github.com/vicebas/PHP-Docblock-Generator
+* version: 0.87 (2016-06-16), link: https://github.com/vicebas/PHP-Docblock-Generator
 
-* version   1.1.0 (2020-12-21)
-  link      https://github.com/thewitness/PHP-Docblock-Generator
+* version: 1.1.0 (2020-12-21), link: https://github.com/thewitness/PHP-Docblock-Generator
 
 ## Credits
 
