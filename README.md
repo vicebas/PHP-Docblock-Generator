@@ -15,6 +15,7 @@ php docblock.php --source=file|folder [ --recursive ] \
 
 Use from command line - params:
 
+```
 --source=path       - the file or folder you want to docblock (php files)
 --recursive         - optional, recursively go through a folder
 --exclude="p1/ p1/" - optional, to exclude a series of paths
@@ -23,6 +24,7 @@ Use from command line - params:
 --full              - optional, use full PHPDoc comment blocks instead of short
 --dryrun            - optional, test the docblock but do not make any changes
 --verbose           - optional, output verbose information on each file processed
+```
 
 ## Examples
 
