@@ -1,5 +1,5 @@
 {
-    "name": "thewitness/php-docblock-generator",
+    "name": "vicebas/php-docblock-generator",
     "description": "Generate PHPDoc Blocks in files and Folders",
     "require": {},
     "autoload": {
