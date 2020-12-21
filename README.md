@@ -60,4 +60,4 @@ php docblock.php --source=target/dir --exclude="vendor/ fa/" --recursive --dryru
 ## Credits
 
 Credit to Sean Coates for the getProtos function, modified a little.
-http://seancoates.com/fun-with-the-tokenizer 
+https://seancoates.com/blogs/fun-with-the-tokenizer/
