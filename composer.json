@@ -1,13 +1,13 @@
 {
-    "name": "vicebas/php-docblock-generator",
+    "name": "thewitness/php-docblock-generator",
     "description": "Generate PHPDoc Blocks in files and Folders",
     "require": {},
     "autoload": {
-		"psr-0": {
-			"DocBlockGenerator\\": "src"
-		}
-	},
+        "psr-0": {
+            "DocBlockGenerator\\": "src"
+        }
+    },
     "bin": [
-		"bin/docblock"
-	]
+        "bin/docblock"
+    ]
 }
