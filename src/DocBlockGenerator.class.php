@@ -841,15 +841,15 @@ class DocBlockGenerator {
 			$doc_block .= $indent . ' * @static' . PHP_EOL;
 		}
 
+		if (isset($data['return'])) {
+			$doc_block .= $indent . ' *'         . PHP_EOL;
+			$doc_block .= $indent . ' * @return type' . PHP_EOL;
+		}
+
 		if ($this->full) {
 			$doc_block .= $indent . ' *'         . PHP_EOL;
 			$doc_block .= $indent . ' * @see'    . PHP_EOL;
 			$doc_block .= $indent . ' * @since'  . PHP_EOL;
-		}
-
-		if (isset($data['return'])) {
-			$doc_block .= $indent . ' *'         . PHP_EOL;
-			$doc_block .= $indent . ' * @return type' . PHP_EOL;
 		}
 
 		$doc_block .= $indent . ' */' . PHP_EOL;
