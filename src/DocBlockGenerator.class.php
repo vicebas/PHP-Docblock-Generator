@@ -2,7 +2,7 @@
 namespace DocBlockGenerator;
 
 class DocBlockGenerator {
-	public $exts                    = array('.php', '.php4', '.php5', '.phps', '.inc');
+	public $exts = array('.php', '.php4', '.php5', '.phps', '.inc');
 
 	public $description_placeholder = 'Insert description here';  // text, if any, to add as placeholder for description
 
@@ -36,6 +36,8 @@ class DocBlockGenerator {
 
 	private $exist_db_comments    = 0;
 	private $exist_nondb_comments = 0;
+	private $not_documented       = 0;
+
 	private $nondb_functions      = array();
 	private $db_functions         = array();
 
@@ -95,7 +97,7 @@ class DocBlockGenerator {
 			$str = '';
 
 			foreach ($this->log as $log_item) {
-				$str .= sprintf('| File: %-84s|' . PHP_EOL, $log_item);
+				$str .= sprintf('| %-120s|' . PHP_EOL, $log_item);
 			}
 
 			print $str;
@@ -116,32 +118,35 @@ class DocBlockGenerator {
 	 * @param mixed $start
 	 */
 	public function summary($end, $start) {
-		printf('+-------------------------------------------------------------------------------------------+' . PHP_EOL);
+		printf('+' . str_repeat('-', 121) . '+' . PHP_EOL);
 
-		printf('| %-90s|' . PHP_EOL, sprintf('DocBlock Generation took %.2f seconds.', $end - $start));
-		printf('+-------------------------------------------------------------------------------------------+' . PHP_EOL);
-		printf('| %-90s|' . PHP_EOL, sprintf('There were %d files total scanned and %d files excluded.',
+		printf('| %-120s|' . PHP_EOL, sprintf('DocBlock Generation took %.2f seconds.', $end - $start));
+		printf('+' . str_repeat('-', 121) . '+' . PHP_EOL);
+		printf('| %-120s|' . PHP_EOL, sprintf('There were %d files total scanned and %d files excluded.',
 			$this->total_files, $this->excluded_files));
 
-		printf('| %-90s|' . PHP_EOL, sprintf('There were %d functions found and %d %s converted.',
+		printf('| %-120s|' . PHP_EOL, sprintf('There were %d functions found and %d %s converted.',
 			$this->total_functions, $this->converted_functions, ($this->dryrun ? 'would be':'were')));
 
-		printf('| %-90s|' . PHP_EOL, sprintf('There were %d classes found and %d %s converted.',
+		printf('| %-120s|' . PHP_EOL, sprintf('There were %d classes found and %d %s converted.',
 			$this->total_classes, $this->converted_classes, ($this->dryrun ? 'would be':'were')));
 
-		printf('| %-90s|' . PHP_EOL, sprintf('There were %d existing docblock functions found.',
+		printf('| %-120s|' . PHP_EOL, sprintf('There were %d functions found with no comments.',
+			$this->not_documented));
+
+		printf('| %-120s|' . PHP_EOL, sprintf('There were %d existing docblock functions found.',
 			$this->exist_db_comments));
 
-		printf('| %-90s|' . PHP_EOL, sprintf('WARNING: There were %d existing non-docblock functions found.',
+		printf('| %-120s|' . PHP_EOL, sprintf('WARNING: There were %d existing non-docblock functions found.',
 			$this->exist_nondb_comments));
 
 		if ($this->dryrun) {
-			printf('| %-90s|' . PHP_EOL, sprintf('There would be %d read/write errors expected.', $this->errors));
+			printf('| %-120s|' . PHP_EOL, sprintf('There would be %d read/write errors expected.', $this->errors));
 		} else {
-			printf('| %-90s|' . PHP_EOL, sprintf('There were %d read/write errors.', $this->errors));
+			printf('| %-120s|' . PHP_EOL, sprintf('There were %d read/write errors.', $this->errors));
 		}
 
-		printf('+-------------------------------------------------------------------------------------------+' . PHP_EOL . PHP_EOL);
+		printf('+' . str_repeat('-', 121) . '+' . PHP_EOL);
 	}
 
 	/**
@@ -158,20 +163,20 @@ class DocBlockGenerator {
 	 * @param mixed $start
 	 */
 	public function preface() {
-		printf('+-------------------------------------------------------------------------------------------+' . PHP_EOL);
-		printf('| %-90s|' . PHP_EOL, sprintf('PHP DocBlock Generator - Starting %s', ($this->dryrun ? '- Dry Run Only':'')));
-		printf('+-------------------------------------------------------------------------------------------+' . PHP_EOL);
-		printf('| %-90s|' . PHP_EOL, sprintf('Processing Starting - Settings below'),);
-		printf('+-------------------------------------------------------------------------------------------+' . PHP_EOL);
-		printf('| %-90s|' . PHP_EOL, sprintf('Target Path: %s', $this->target));
-		printf('| %-90s|' . PHP_EOL, sprintf('Recursion is: %s', $this->recursive ? 'Enabled':'Disabled'));
-		printf('| %-90s|' . PHP_EOL, sprintf('File Exclusions: %s', ($this->exclude ? implode(', ', $this->exclude) : 'None Excluded')));
-		printf('| %-90s|' . PHP_EOL, sprintf('Included Functions: %s', ($this->functions ? implode(', ', $this->functions) : 'All Functions')));
-		printf('| %-90s|' . PHP_EOL, sprintf('Anonymous Functions: %s', ($this->anonymous ? 'Included' : 'Skipped')));
-		printf('| %-90s|' . PHP_EOL, sprintf('PHPDoc Comment Style: %s', ($this->full ? 'Full' : 'Short')));
+		printf('+' . str_repeat('-', 121) . '+' . PHP_EOL);
+		printf('| %-120s|' . PHP_EOL, sprintf('PHP DocBlock Generator - Starting %s', ($this->dryrun ? '- Dry Run Only':'')));
+		printf('+' . str_repeat('-', 121) . '+' . PHP_EOL);
+		printf('| %-120s|' . PHP_EOL, sprintf('Processing Starting - Settings below'),);
+		printf('+' . str_repeat('-', 121) . '+' . PHP_EOL);
+		printf('| %-120s|' . PHP_EOL, sprintf('Target Path: %s', $this->target));
+		printf('| %-120s|' . PHP_EOL, sprintf('Recursion is: %s', $this->recursive ? 'Enabled':'Disabled'));
+		printf('| %-120s|' . PHP_EOL, sprintf('File Exclusions: %s', ($this->exclude ? implode(', ', $this->exclude) : 'None Excluded')));
+		printf('| %-120s|' . PHP_EOL, sprintf('Included Functions: %s', ($this->functions ? implode(', ', $this->functions) : 'All Functions')));
+		printf('| %-120s|' . PHP_EOL, sprintf('Anonymous Functions: %s', ($this->anonymous ? 'Included' : 'Skipped')));
+		printf('| %-120s|' . PHP_EOL, sprintf('PHPDoc Comment Style: %s', ($this->full ? 'Full' : 'Short')));
 
 		if ($this->verbose) {
-			printf('+-------------------------------------------------------------------------------------------+' . PHP_EOL);
+			printf('+' . str_repeat('-', 121) . '+' . PHP_EOL);
 		}
 	}
 
@@ -261,7 +266,7 @@ class DocBlockGenerator {
 		if (is_array($this->exclude) && sizeof($this->exclude)) {
 			foreach ($this->exclude as $path) {
 				if (strpos($target, $path) !== false) {
-					$this->log[] = "{$target} - is Excluded.";
+					//$this->log[] = "{$target} - is Excluded.";
 					$this->excluded_files++;
 
 					return true;
@@ -346,9 +351,14 @@ class DocBlockGenerator {
 	 */
 	public function fileDocBlock() {
 		$this->nbr_docblocks = 0;
-		$this->file_contents  = file_get_contents($this->target);
+
+		$this->log[] = "NOTE: Tokenizing {$this->target}";
+
+		$this->file_contents = file_get_contents($this->target);
 
 		list($funcs, $classes) = $this->getProtos();
+
+		$this->log[] = "NOTE: Opening File for Post Processing {$this->target}";
 
 		$handle = fopen($this->target, 'r');
 
@@ -356,10 +366,13 @@ class DocBlockGenerator {
 			$contents = explode(PHP_EOL, $contents);
 			$contents = $this->docBlock($contents, $funcs, $classes, $this->functions);
 			$contents = implode(PHP_EOL, $contents);
+
 			fclose($handle);
 
+			$this->log[] = "NOTE: Closing File after Post Processing {$this->target}";
+
 			if ($this->nbr_docblocks == 0) {
-				$this->log[] = "{$this->target} - Nothing to DocBlock";
+				$this->log[] = "NOTE: Nothing to DocBlock for {$this->target}";
 				$this->skipped_files++;
 			} else {
 				if (!$this->dryrun) {
@@ -368,13 +381,13 @@ class DocBlockGenerator {
 					if (fwrite($handle, $contents)) {
 						$this->converted_functions += $this->nbr_docblocks;
 
-						$this->log[] = "{$this->target} - DocBlocked " . $this->nbr_docblocks;
+						$this->log[] = "NOTE: DocBlocked " . $this->nbr_docblocks . " in {$this->target}";
 						fclose($handle);
 
 						return;
 					} else {
 						fclose($handle);
-						$this->log[] = "WARNING: Could not write new content. - Check Permissions";
+						$this->log[] = "WARNING: Write error for {$this->target} - Check Permissions";
 						$this->errors++;
 
 						return;
@@ -389,7 +402,7 @@ class DocBlockGenerator {
 			}
 		} else {
 			fclose($handle);
-			$this->log[] = "Could not get file contents.\nCheck Permissions";
+			$this->log[] = "WARNING: Read error for {$this->target} - Check Permissions";
 			$this->errors++;
 
 			return;
@@ -419,13 +432,19 @@ class DocBlockGenerator {
 
 		for ($i = 0; $i < $count; $i++) {
 			if (is_array($tokens[$i]) && $tokens[$i][0] == T_COMMENT) {
-				$comment  = true;
-				$dcomment = false;
+				// Ignore the first comment if it includes copyright
+				if (stripos($tokens[$i][1], 'copyright') === false) {
+					$comment  = true;
+					$dcomment = false;
+				}
 			}
 
 			if (is_array($tokens[$i]) && $tokens[$i][0] == T_DOC_COMMENT) {
-				$dcomment = true;
-				$comment  = false;
+				// Ignore the first comment if it includes copyright
+				if (stripos($tokens[$i][1], 'copyright') === false) {
+					$dcomment = true;
+					$comment  = false;
+				}
 			}
 
 			if (is_array($tokens[$i]) && $tokens[$i][0] == T_RETURN) {
@@ -445,12 +464,20 @@ class DocBlockGenerator {
 				if ($comment) {
 					$this->exist_nondb_comments++;
 
+					if ($this->verbose) {
+						$this->log[] = "WARNING: Class '{$curr_class}' found in {$this->target} is commented in a Non DocBlock fashion";
+					}
+
 					$comment  = false;
 					$dcomment = false;
 
 					$this->nondb_classes[$curr_class] = $curr_class;
 				} elseif ($dcomment) {
 					$this->exist_db_comments++;
+
+					if ($this->verbose) {
+						$this->log[] = "NOTE: Class '{$curr_class}' found is commented in a DocBlock fashion";
+					}
 
 					$comment  = false;
 					$dcomment = false;
@@ -490,10 +517,15 @@ class DocBlockGenerator {
 				$next_by_ref = false;
 				$this_func   = array();
 				$func_status = array();
-				$curr_func   = $tokens[$i][1];
+				$curr_func   = $tokens[$i+2][1];
 
 				if ($comment) {
 					$this->exist_nondb_comments++;
+
+					if ($this->verbose) {
+						$this->log[] = "WARNING: Function '{$curr_func}' in {$this->target} is commented in a Non DocBlock fashion";
+					}
+					print "WARNING: Function '{$curr_func}' in {$this->target} is commented in a Non DocBlock fashion" . PHP_EOL;
 
 					$comment  = false;
 					$dcomment = false;
@@ -502,10 +534,20 @@ class DocBlockGenerator {
 				} elseif ($dcomment) {
 					$this->exist_db_comments++;
 
+					if ($this->verbose) {
+						$this->log[] = "NOTE: Function '{$curr_func}' found is commented in a DocBlock fashion";
+					}
+
 					$comment  = false;
 					$dcomment = false;
 
 					$this->db_functions[$curr_func] = $curr_func;
+				} else {
+					$this->not_documented++;
+
+					if ($this->verbose) {
+						$this->log[] = "WARNING: Function '{$curr_func}' found is not commented.";
+					}
 				}
 
 				if (isset($tokens[$i - 2][1]) && $tokens[$i - 2][1] == 'static') {
@@ -611,6 +653,12 @@ class DocBlockGenerator {
 				++$class_depth;
 			} elseif ($tokens[$i] == '}') {
 				--$class_depth;
+			}
+
+			/* Reset the comment tracker when we get to the end of a function block */
+			if (!is_array($tokens[$i])) {
+				$comment  = false;
+				$dcomment = false;
 			}
 
 			if ($class_depth == 0) {
@@ -859,7 +907,9 @@ class DocBlockGenerator {
 
 	/**
 	 * Decode the parameter type
+	 *
 	 * @param type $type
+	 *
 	 * @return string
 	 */
 	public function decodeType($type) {
