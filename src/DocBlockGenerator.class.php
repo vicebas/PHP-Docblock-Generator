@@ -814,26 +814,23 @@ class DocBlockGenerator {
 	 * @since  0.85
 	 */
 	public function functionDocBlock($indent, $data) {
-		$doc_block  = $indent.'/**' . PHP_EOL;
-		$doc_block .= $indent." * {$data['name']}".PHP_EOL;
+		$doc_block  = $indent . '/**' . PHP_EOL;
+		$doc_block .= $indent . " * {$data['name']}" . PHP_EOL;
 
 		if (!empty($this->description_placeholder)) {
+			$doc_block .= $indent . ' *' . PHP_EOL;
+
 			$doc_block .= $indent . ' * ' . $this->description_placeholder . PHP_EOL;
 		}
 
 		$doc_block .= $indent . ' *' . PHP_EOL;
-		$doc_block .= $indent . ' *' . PHP_EOL;
 
 		if (isset($data['params'])) {
 			foreach ($data['params'] as $func_param) {
-				$doc_block .= $indent." * @param ". (isset($func_param['default'])?$this->decodeType($func_param['default']):'type') . " {$func_param['name']}" . PHP_EOL;
+				$doc_block .= $indent . " * @param " .
+					(isset($func_param['default']) ? $this->decodeType($func_param['default']) : 'type') .
+					" {$func_param['name']}" . PHP_EOL;
 			}
-
-			$doc_block .= $indent . ' *' . PHP_EOL;
-		}
-
-		if (isset($data['return'])) {
-			$doc_block .= $indent . ' * @return type' . PHP_EOL;
 		}
 
 		if (!empty($data['access'])) {
@@ -846,13 +843,16 @@ class DocBlockGenerator {
 
 		if ($this->full) {
 			$doc_block .= $indent . ' *'         . PHP_EOL;
-			$doc_block .= $indent . ' * @access' . PHP_EOL;
-			$doc_block .= $indent . ' * @static' . PHP_EOL;
 			$doc_block .= $indent . ' * @see'    . PHP_EOL;
 			$doc_block .= $indent . ' * @since'  . PHP_EOL;
 		}
 
-		$doc_block .= $indent.' */'.PHP_EOL;
+		if (isset($data['return'])) {
+			$doc_block .= $indent . ' *'         . PHP_EOL;
+			$doc_block .= $indent . ' * @return type' . PHP_EOL;
+		}
+
+		$doc_block .= $indent . ' */' . PHP_EOL;
 
 		return $doc_block;
 	}
